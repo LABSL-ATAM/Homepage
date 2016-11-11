@@ -151,7 +151,8 @@ sub build {
         my ($nombre_limpio) = $css_src =~ m/[\/]([^\/]+)$/;
         my $nombre_css_final = $dir_build . '/css/' . $nombre_limpio;
         my $nombre_css_final_l = 'css/' . $nombre_limpio;
-        write_file($nombre_css_final,optimize($wd, 1));
+        write_file($nombre_css_final,$wd);
+        #write_file($nombre_css_final,optimize($wd, 1));
 
         #armar links
         my $link_final_css = '<link rel="stylesheet" type="text/css" href="' . 
@@ -189,7 +190,8 @@ sub build {
     $indexin .= index_datas();
     $indexin .= do_index();
     my $indexin_file_nombre = $dir_build . '/index.html';
-    write_file( $indexin_file_nombre , optimize($indexin,0) );
+    #write_file( $indexin_file_nombre , optimize($indexin,0) );
+    write_file( $indexin_file_nombre , $indexin );
 }
 
 sub do_SEOand_shut_up{
@@ -234,8 +236,9 @@ sub pie{
 sub make_header {
     my $in = $_[0];
     my $fucking_utf = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>' . "\n";
+    my $fuente = '<link href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" rel="stylesheet"/>' . "\n";
     my $fucking_seo = do_SEOand_shut_up();
-    my $H = '<!doctype html><head>' . $fucking_seo . $favico_link_para_header . "\n" . $in . "\n" . $fucking_utf . '</head>';
+    my $H = '<!doctype html><head>' . $fucking_seo . $favico_link_para_header . "\n" . $in . "\n" . $fucking_utf . $fuente . '</head>';
     return $H;    
 }
 
