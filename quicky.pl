@@ -6,7 +6,7 @@
 #        DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE 
 #                    Version 2, December 2004 
 #
-# Copyright (C) 2004 Sam Hocevar <sam@hocevar.net> 
+# Copyright (C) 2016 MarxBro by LABSL-ATAM <marxbro@gmx.com> 
 #
 # Everyone is permitted to copy and distribute verbatim or modified 
 # copies of this license document, and changing it is allowed as long 
@@ -29,6 +29,13 @@ use Text::Markdown          qw/markdown/;
 use File::Find::Rule;
 use List::MoreUtils         qw/uniq/;
 
+use Text::Format;
+use XML::Entities;
+
+use HTML::Entities;
+%HTML::Entities::char2entity = %{
+    XML::Entities::Data::char2entity('all');
+};
 =pod
 
 =encoding utf8
@@ -40,7 +47,7 @@ Script para bloggear como un enfermo.
 =cut
 
 my $t_banana = strftime ("%d_%B_%Y_%H_%M_%S",localtime(time()));
-my $t_manzan = strftime ("%d-%B-%Y %H:%M",localtime(time()));
+my $t_manzan = mes_bien_pese_a_locales(strftime ("%d-%B-%Y %H:%M",localtime(time())));
 
 =pod
 
@@ -69,6 +76,7 @@ my $dir_dwns    = "dwns";
 my %linky       = ();
 
 
+
 #Favicon: Previene el error 404
 my $favico_link_para_header = '<link rel="shortcut icon" href="favicon.ico"/>';
 
@@ -76,10 +84,51 @@ my $favico_link_para_header = '<link rel="shortcut icon" href="favicon.ico"/>';
 my $comments_allow = 0; # Cambiar variables en la funcion embed_comments();
 
 # S E O ( o algo asi )
+my $blog_title = 'Laboratorio de Software Libre - ATAM';
+my $blog_url = 'https://labsl.multimediales.com.ar';
 my @keywords_fixed = ( qw /software libre ATAM UNA tecnologia linux perl git/ );
 my $blog_autores = '"LABSL - ATAM"';
 my $blog_desc = '"Blog Institucional del Laboratorio de Software Libre del ATAM - UNA."';
 
+# Htaccess
+my $apache_target= 1; # poner en 0 si el servidor en nginx u otro.
+my $htaccess = <<EOF
+# Fijarse que el directorio desde donde se sirve el contenido tenga:
+# AllowOverride All, o nada de esto va a andar.
+Options -Indexes -FollowSymLinks
+
+# compresion 
+<ifModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+</ifModule>
+
+# cachetear
+<ifModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/gif "access plus 1 months"
+  ExpiresByType image/jpg "access plus 1 months"
+  ExpiresByType image/jpeg "access plus 1 months"
+  ExpiresByType image/png "access plus 1 months"
+  ExpiresByType image/vnd.microsoft.icon "access plus 1 months"
+  ExpiresByType image/x-icon "access plus 1 months"
+  ExpiresByType image/ico "access plus 1 months"
+  ExpiresByType application/javascript "now plus 1 months"
+  ExpiresByType application/x-javascript "now plus 1 months"
+  ExpiresByType text/javascript "now plus 1 months"
+  ExpiresByType text/css "now plus 1 months"
+  ExpiresDefault "access plus 1 days"
+</ifModule>
+
+EOF
+;
 
 # Un pie al final de cada página
 my $pie_html    = '<span>' . 'Última modificación: ' . 
@@ -192,6 +241,15 @@ sub build {
     my $indexin_file_nombre = $dir_build . '/index.html';
     #write_file( $indexin_file_nombre , optimize($indexin,0) );
     write_file( $indexin_file_nombre , $indexin );
+
+# H T A CCESS
+    do_htaccess();
+
+# R S S
+    my $rss_file_out = $dir_build . '/rss';
+    my $rss_to_write_file = do_rss();
+    write_file( $rss_file_out , $rss_to_write_file);
+
 }
 
 sub do_SEOand_shut_up{
@@ -216,7 +274,7 @@ sub do_index {
     my $ind = '<table>';
     foreach my $n_html_page (sort(keys(%linky))){
         my ($l,$modif) = split(/spliteo/, $linky{$n_html_page});
-        my $modifiz = strftime ("%d-%B-%Y %H:%M",localtime( $modif ));
+        my $modifiz = mes_bien_pese_a_locales(strftime ("%d - %B - %Y %H:%M",localtime( $modif )));
         my $lllll    = '<tr><td>' .
             '<a href="' . $n_html_page . '" >' . $l . 
             '</a>' . '</td><td>' . $modifiz . '</td>' .
@@ -238,7 +296,26 @@ sub make_header {
     my $fucking_utf = '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>' . "\n";
     my $fuente = '<link href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" rel="stylesheet"/>' . "\n";
     my $fucking_seo = do_SEOand_shut_up();
-    my $H = '<!doctype html><head>' . $fucking_seo . $favico_link_para_header . "\n" . $in . "\n" . $fucking_utf . $fuente . '</head>';
+    my $favico_data = '<link rel="apple-touch-icon" sizes="57x57" href="/data/apple-icon-57x57.png">
+        <link rel="apple-touch-icon" sizes="60x60" href="/data/apple-icon-60x60.png">
+        <link rel="apple-touch-icon" sizes="72x72" href="/data/apple-icon-72x72.png">
+        <link rel="apple-touch-icon" sizes="76x76" href="/data/apple-icon-76x76.png">
+        <link rel="apple-touch-icon" sizes="114x114" href="/data/apple-icon-114x114.png">
+        <link rel="apple-touch-icon" sizes="120x120" href="/data/apple-icon-120x120.png">
+        <link rel="apple-touch-icon" sizes="144x144" href="/data/apple-icon-144x144.png">
+        <link rel="apple-touch-icon" sizes="152x152" href="/data/apple-icon-152x152.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/data/apple-icon-180x180.png">
+        <link rel="icon" type="image/png" sizes="192x192"  href="/data/android-icon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/data/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="96x96" href="/data/favicon-96x96.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/data/favicon-16x16.png">
+        <link rel="manifest" href="/data/manifest.json">
+        <meta name="msapplication-TileColor" content="#ffffff">
+        <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+        <meta name="theme-color" content="#ffffff">';
+    my $rss_link_header = '<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="' . $blog_url . '/rss">';
+    my $H = '<!doctype html><head>' . $fucking_seo . $favico_data . $rss_link_header ."\n" . $in . "\n" . $fucking_utf . $fuente . '</head>';
+    #my $H = '<!doctype html><head>' . $fucking_seo . $favico_link_para_header . "\n" . $in . "\n" . $fucking_utf . $fuente . '</head>';
     return $H;    
 }
 
@@ -270,7 +347,7 @@ sub get_stuff {
     my @ff = ();
     if ($stuff eq 'stuff'){
         @ff = File::Find::Rule   -> file ()
-                                    -> name ('*.png', '*.jpeg', '*.jpg', '*.gif')
+                                    -> name ('*.png', '*.jpeg', '*.jpg', '*.gif', '*.json', '*.xml')
                                     -> in   ($pp);
     } else {
         @ff = File::Find::Rule   -> file ()
@@ -329,6 +406,53 @@ sub embed_comments {
     return $comments;
 }
 
+sub do_htaccess {
+    my $ht_nn = $dir_build . '/.htaccess' ;
+    write_file($ht_nn,$htaccess);
+    chmod 0755, $ht_nn;
+}
+
+sub mes_bien_pese_a_locales {
+    my $mes = shift;
+    $mes =~ s/January/Enero/g;
+    $mes =~ s/February/Febrero/g;
+    $mes =~ s/March/Marzo/g;
+    $mes =~ s/April/Abril/g;
+    $mes =~ s/May/Mayo/g;
+    $mes =~ s/June/Junio/g;
+    $mes =~ s/July/Julio/g;
+    $mes =~ s/August/Agosto/g;
+    $mes =~ s/September/Septiembre/g;
+    $mes =~ s/October/Octubre/g;
+    $mes =~ s/November/Noviembre/g;
+    $mes =~ s/December/Diciembre/g;
+    return $mes;
+}
+
+sub do_rss {
+    my $rss_header = '<?xml version="1.0" encoding="UTF-8" ?><rss version="2.0"><channel>' .
+        '<title>'.  xen($blog_title) .  '</title><link>'.  xen($blog_url) .  '</link><description>' .  
+        xen($blog_desc) . '</description>';
+
+    my $feeds = $rss_header;
+    foreach my $n_html_page (reverse(sort { $linky{$a} <=> $linky{$b} } keys %linky)){
+        my ($modif,$l,$resumen) = split(/spliteo/, $linky{$n_html_page});
+        my $modifiz = mes_bien_pese_a_locales(strftime ("%a, %d %m %Y %T %Z",localtime( $modif )));
+        say $modifiz if $debug;
+        $feeds .= '<item><title>' . xen($l). '</title><link>'. xen($n_html_page) . '</link><description>' .
+            xen($l) . '</description><pubDate>' . xen($modifiz) . '</pubDate></item>';
+    }
+    $feeds .= '</channel></rss>';
+    say $feeds if $debug;
+    return $feeds;
+}
+
+sub xen {
+    my $in = shift;
+    #my $out = XML::Entities::numify('all',encode_entities($in));
+    my $out = XML::Entities::numify('all', encode_entities($in, '"<>/&%?:'));
+    return $out;
+}
 ######################################################################
 #                                                       P O D  Z O N E
 ######################################################################
@@ -349,4 +473,4 @@ __DATA__
 
 Esta es la página oficial del LABSL del ATAM/UNA.
 
-## Artículos:
+## Enlaces:

@@ -1,5 +1,8 @@
 # Manifiesto del Laboratorio de Software Libre 
 
+!["logo"](/data/apple-icon-precomposed.png)
+
+
 ## Área Transdepartamental de Artes Multimediales de la Universidad Nacional del Arte
 
 El uso de Software Libre permite autonomía tecnológica,
@@ -26,7 +29,7 @@ Creemos que éste es el presupuesto fundamental para enmarcar el avance
  del acervo cultural que constituyen y las facilidades que representan.
 
 
-# Objetivos
+## Objetivos
 
 * Difundir y estrechar el vínculo entre las nuevas tecnologías (estudio, uso y creación) y nuestra comunidad educativa.
 * Crear un punto de encuentro para promover los estándares libres entre la comunidad universitaria y también en la sociedad.
