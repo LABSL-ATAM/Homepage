@@ -436,7 +436,7 @@ sub do_rss {
 
     my $feeds = $rss_header;
     foreach my $n_html_page (reverse(sort { $linky{$a} <=> $linky{$b} } keys %linky)){
-        my ($modif,$l,$resumen) = split(/spliteo/, $linky{$n_html_page});
+        my ($l,$modif) = split(/spliteo/, $linky{$n_html_page});
         my $modifiz = mes_bien_pese_a_locales(strftime ("%a, %d %m %Y %T %Z",localtime( $modif )));
         say $modifiz if $debug;
         $feeds .= '<item><title>' . xen($l). '</title><link>'. xen($n_html_page) . '</link><description>' .
