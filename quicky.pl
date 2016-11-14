@@ -218,6 +218,7 @@ sub build {
         my $ultima_modificacion = $ii_[9];
         my $contenido = $header_with_css;
         $contenido .= '<body>' . "\n";
+        $contenido .= '<main class="container">' . "\n";
         $contenido .= markdown($shit) . "\n";
         if ($comments_allow){
             my $comments = embed_comments();
@@ -236,6 +237,7 @@ sub build {
 # I N D E X
     my $indexin = $header_with_css;
     $indexin .= '<body>';
+    $indexin .= '<main class="container">' . "\n";
     $indexin .= index_datas();
     $indexin .= do_index();
     my $indexin_file_nombre = $dir_build . '/index.html';
@@ -271,7 +273,8 @@ sub get_keywords {
 }
 
 sub do_index {
-    my $ind = '<table>';
+    my $ind = '<h2>Entradas:</h2>';
+    $ind = '<table>';
     foreach my $n_html_page (sort(keys(%linky))){
         my ($l,$modif) = split(/spliteo/, $linky{$n_html_page});
         my $modifiz = mes_bien_pese_a_locales(strftime ("%d - %B - %Y %H:%M",localtime( $modif )));
@@ -287,7 +290,9 @@ sub do_index {
 }
 
 sub pie{
-   my $fin = $pie_html . '</body></html>';
+   my $fin = '</main>';
+   $fin .= '<footer class="container">'.$pie_html . '</footer>';
+   $fin .= '</body></html>';
    return $fin;
 }
 
