@@ -237,8 +237,9 @@ sub build {
 # I N D E X
     my $indexin = $header_with_css;
     $indexin .= '<body>';
+    $indexin .= '<header class="container">'.index_datas().'</header>';
     $indexin .= '<main class="container">' . "\n";
-    $indexin .= index_datas();
+    #$indexin .= index_datas();
     $indexin .= do_index();
     my $indexin_file_nombre = $dir_build . '/index.html';
     #write_file( $indexin_file_nombre , optimize($indexin,0) );
@@ -274,7 +275,7 @@ sub get_keywords {
 
 sub do_index {
     my $ind = '<h2>Entradas:</h2>';
-    $ind = '<table>';
+    $ind .= '<table>';
     foreach my $n_html_page (sort(keys(%linky))){
         my ($l,$modif) = split(/spliteo/, $linky{$n_html_page});
         my $modifiz = mes_bien_pese_a_locales(strftime ("%d - %B - %Y %H:%M",localtime( $modif )));
@@ -477,5 +478,3 @@ __DATA__
 # Laboratorio de Software Libre del ATAM - UNA.
 
 Esta es la página oficial del LABSL del ATAM/UNA.
-
-## Enlaces:
