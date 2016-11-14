@@ -132,8 +132,11 @@ EOF
 ;
 
 # Un pie al final de cada página
-my $pie_html    = '<span>' . 'Última modificación: ' . 
-                    $t_manzan . ' by <strong>'. $blog_autores .'</strong>.' . '</span>';
+my $pie_html = 
+'<span class="float-right">' . 
+    'Última modificación: ' . $t_manzan . 
+    ' by <strong>'. $blog_autores .'</strong>' . 
+'</span>';
 
 my $exitos = "Todo anduvo joya; en la carpeta " . $dir_build . " esta el blog.";
 
@@ -478,6 +481,6 @@ Zaijian.
 
 __DATA__
 
-# Laboratorio de Software Libre del ATAM - UNA.
+# Laboratorio de Software Libre del ATAM - UNA
 
-Esta es la página oficial del LABSL del ATAM/UNA.
+Página oficial del LABSL del ATAM/UNA
