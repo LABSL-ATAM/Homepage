@@ -275,8 +275,8 @@ input[type='radio'] {
 
 .container {
   margin: 0 auto;
-  max-width: 112.0rem;
-  padding: 0 2.0rem;
+  max-width: 80rem;
+  padding: 4rem 2.0rem;
   position: relative;
   width: 100%;
 }
@@ -479,7 +479,13 @@ ol {
 }
 
 ul {
-  list-style: circle inside;
+  list-style: none;
+}
+
+li:before {
+  color: #00ff00;
+  content: '\2022';
+  padding-right: 1em;
 }
 
 .button,
