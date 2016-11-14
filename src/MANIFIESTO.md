@@ -2,9 +2,6 @@
 
 !["logo"](/data/apple-icon-precomposed.png)
 
-
-## Área Transdepartamental de Artes Multimediales de la Universidad Nacional del Arte
-
 El uso de Software Libre permite autonomía tecnológica,
  estandarización e integración, seguridad, independencia,
  democratización de la información y ahorro de recursos.

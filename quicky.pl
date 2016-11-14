@@ -89,6 +89,7 @@ my $blog_url = 'https://labsl.multimediales.com.ar';
 my @keywords_fixed = ( qw /software libre ATAM UNA tecnologia linux perl git/ );
 my $blog_autores = '"LABSL - ATAM"';
 my $blog_desc = '"Blog Institucional del Laboratorio de Software Libre del ATAM - UNA."';
+my $header_lab = '<header class="container">' . "Laboratorio de Software Libre del ATAM/UNA" . '</header>';
 
 # Htaccess
 my $apache_target= 1; # poner en 0 si el servidor en nginx u otro.
@@ -218,6 +219,7 @@ sub build {
         my $ultima_modificacion = $ii_[9];
         my $contenido = $header_with_css;
         $contenido .= '<body>' . "\n";
+        $contenido .= $header_lab . "\n";
         $contenido .= '<main class="container">' . "\n";
         $contenido .= markdown($shit) . "\n";
         if ($comments_allow){
@@ -230,6 +232,7 @@ sub build {
         my $nombre_archivo_final = $dir_build . '/' . $titulo_page . '.html';
         my $nombre_archivo_final_l = $titulo_page . '.html';
         $linky{$nombre_archivo_final_l} = $titulo_index . 'spliteo' . $ultima_modificacion;
+        say $contenido if $debug;
         write_file( $nombre_archivo_final , optimize($contenido , 0));
     }
 
