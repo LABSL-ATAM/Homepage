@@ -282,7 +282,7 @@ sub get_keywords {
 sub do_index {
     my $ind = '<h2>Entradas:</h2>';
     $ind .= '<table>';
-    foreach my $n_html_page (reverse(sort { $linky{$a} <=> $linky{$b} } keys %linky)){
+    foreach my $n_html_page ( sort { $linky{$a} <=> $linky{$b} } keys %linky){
         my ($l,$modif) = split(/spliteo/, $linky{$n_html_page});
         my $modifiz = mes_bien_pese_a_locales(strftime ("%d - %B - %Y %H:%M",localtime( $modif )));
         my $lllll    = '<tr><td>' .
