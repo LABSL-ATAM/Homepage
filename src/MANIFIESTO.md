@@ -1,13 +1,11 @@
 # Manifiesto del Laboratorio de Software Libre 
 
-!["logo"](/data/apple-icon-precomposed.png)
-
 El uso de Software Libre permite autonomía tecnológica,
  estandarización e integración, seguridad, independencia,
  democratización de la información y ahorro de recursos.
 
-Creemos que el uso de herramientas propietarias contribuye a lograr 
- una fuerte dependencia en las mismas. En contrapartida, mediante las 
+Creemos que el uso de herramientas propietarias genera 
+ una fuerte dependencia. En contrapartida, mediante las 
  herramientas libres, se le brinda al usuario la posibilidad de conocer 
  la implementación de las mismas y los fundamentos tecnológicos en
  los que éstas se basan. El Software Libre permite el uso irrestricto, 
