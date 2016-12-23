@@ -546,6 +546,7 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: 'Press Start 2P',Droid Sans Mono', 'Lucida Console', Monaco, monospace;
   font-weight: 300;
   letter-spacing: -.1rem;
   margin-bottom: 5rem;

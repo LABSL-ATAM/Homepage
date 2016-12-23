@@ -322,6 +322,7 @@ sub make_header {
         <link rel="icon" type="image/png" sizes="96x96" href="/data/favicon-96x96.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/data/favicon-16x16.png">
         <link rel="manifest" href="/data/manifest.json">
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet"> 
         <meta name="msapplication-TileColor" content="#ffffff">
         <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
         <meta name="theme-color" content="#ffffff">';
@@ -483,4 +484,6 @@ __DATA__
 
 # Laboratorio de Software Libre del ATAM - UNA
 
-Página oficial del LABSL del ATAM/UNA
+Página oficial del LABSL del ATAM/UNA.
+
+![logo](/data/ms-icon-310x310.png)
